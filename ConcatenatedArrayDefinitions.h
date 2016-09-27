@@ -5,177 +5,180 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#ifndef ARRAY_DEFINITIONS_H
-#define ARRAY_DEFINITIONS_H
+#ifndef CONCATENATED_ARRAY_DEFINITIONS_H
+#define CONCATENATED_ARRAY_DEFINITIONS_H
 
 #ifndef ARDUINO
 #include <cstring>
 #endif
 
-template <typename T, size_t MAX_SIZE>
-ConcatenatedArray<T, MAX_SIZE>::ConcatenatedArray()
+template <typename T, size_t ARRAY_COUNT_MAX>
+ConcatenatedArray<T, ARRAY_COUNT_MAX>::ConcatenatedArray()
 {
-  size_ = 0;
+  array_count_ = 0;
 }
 
-template <typename T, size_t MAX_SIZE>
-ConcatenatedArray<T, MAX_SIZE>::ConcatenatedArray(const T & value)
+template <typename T>
+template <size_t MAX_SIZE>
+void ConcatenatedArray<T, ARRAY_COUNT_MAX>::addArray(T (&values)[MAX_SIZE], size_t size)
 {
-  size_ = 0;
-  fill(value);
-}
-
-template <typename T, size_t MAX_SIZE>
-template <typename U, size_t N>
-ConcatenatedArray<T, MAX_SIZE>::ConcatenatedArray(const U (&values)[N])
-{
-  size_ = 0;
-  fill(values);
-}
-
-template <typename T, size_t MAX_SIZE>
-template <typename U, size_t N>
-ConcatenatedArray<T, MAX_SIZE>::ConcatenatedArray(const ConcatenatedArray<U,N> & values)
-{
-  size_ = 0;
-  fill(values);
-}
-
-template <typename T, size_t MAX_SIZE>
-T & ConcatenatedArray<T, MAX_SIZE>::operator[](const size_t i)
-{
-  return values_[i];
-}
-
-template <typename T, size_t MAX_SIZE>
-T & ConcatenatedArray<T, MAX_SIZE>::at(const size_t i)
-{
-  return values_[i];
-}
-
-template <typename T, size_t MAX_SIZE>
-T & ConcatenatedArray<T, MAX_SIZE>::front()
-{
-  return values_[0];
-}
-
-template <typename T, size_t MAX_SIZE>
-T & ConcatenatedArray<T, MAX_SIZE>::back()
-{
-  return values_[size_-1];
-}
-
-template <typename T, size_t MAX_SIZE>
-void ConcatenatedArray<T, MAX_SIZE>::clear()
-{
-  size_ = 0;
-}
-
-template <typename T, size_t MAX_SIZE>
-template <typename U>
-void ConcatenatedArray<T, MAX_SIZE>::fill(const U & value)
-{
-  assign(MAX_SIZE,value);
-}
-
-template <typename T, size_t MAX_SIZE>
-template <typename U, size_t N>
-void ConcatenatedArray<T, MAX_SIZE>::fill(const U (&values)[N])
-{
-  assign(N,values);
-}
-
-template <typename T, size_t MAX_SIZE>
-template <typename U, size_t N>
-void ConcatenatedArray<T, MAX_SIZE>::fill(const ConcatenatedArray<U,N> & values)
-{
-  assign(values.size(),values);
-}
-
-template <typename T, size_t MAX_SIZE>
-template <typename U>
-void ConcatenatedArray<T, MAX_SIZE>::assign(const size_t n, const U & value)
-{
-  size_t assign_size = ((n < MAX_SIZE) ? n : MAX_SIZE);
-  size_ = assign_size;
-  for (size_t i=0; i<assign_size; i++)
+  if (array_count_ < ARRAY_COUNT_MAX)
   {
-    values_[i] = value;
+    arrays_[array_count_].setStorage(values,size);
+    ++array_count_;
   }
 }
 
-template <typename T, size_t MAX_SIZE>
-template <typename U, size_t N>
-void ConcatenatedArray<T, MAX_SIZE>::assign(const size_t n, const U (&values)[N])
+template <typename T, size_t ARRAY_COUNT_MAX>
+T & ConcatenatedArray<T, ARRAY_COUNT_MAX>::operator[](const size_t i)
 {
-  size_t n_smallest = ((n < N) ? n : N);
-  size_t assign_size = ((n_smallest < MAX_SIZE) ? n_smallest : MAX_SIZE);
-  size_ = assign_size;
-  for (size_t i=0; i<assign_size; i++)
+  return arrays_[i];
+}
+
+template <typename T, size_t ARRAY_COUNT_MAX>
+T & ConcatenatedArray<T, ARRAY_COUNT_MAX>::at(const size_t i)
+{
+  return arrays_[i];
+}
+
+template <typename T, size_t ARRAY_COUNT_MAX>
+T & ConcatenatedArray<T, ARRAY_COUNT_MAX>::front()
+{
+  return arrays_[0].front();
+}
+
+template <typename T, size_t ARRAY_COUNT_MAX>
+T & ConcatenatedArray<T, ARRAY_COUNT_MAX>::back()
+{
+  return arrays_[array_count__-1].back();
+}
+
+template <typename T, size_t ARRAY_COUNT_MAX>
+void ConcatenatedArray<T, ARRAY_COUNT_MAX>::clear()
+{
+  for (size_t i=0; i<array_count_; ++i)
   {
-    values_[i] = values[i];
+    arrays_[i].clear();
+  }
+  array_count_ = 0;
+}
+
+// template <typename T, size_t ARRAY_COUNT_MAX>
+// template <typename U>
+// void ConcatenatedArray<T, ARRAY_COUNT_MAX>::fill(const U & value)
+// {
+//   assign(ARRAY_COUNT_MAX,value);
+// }
+
+// template <typename T, size_t ARRAY_COUNT_MAX>
+// template <typename U, size_t N>
+// void ConcatenatedArray<T, ARRAY_COUNT_MAX>::fill(const U (&values)[N])
+// {
+//   assign(N,values);
+// }
+
+// template <typename T, size_t ARRAY_COUNT_MAX>
+// template <typename U, size_t N>
+// void ConcatenatedArray<T, ARRAY_COUNT_MAX>::fill(const ConcatenatedArray<U,N> & values)
+// {
+//   assign(values.size(),values);
+// }
+
+// template <typename T, size_t ARRAY_COUNT_MAX>
+// template <typename U>
+// void ConcatenatedArray<T, ARRAY_COUNT_MAX>::assign(const size_t n, const U & value)
+// {
+//   size_t assign_size = ((n < ARRAY_COUNT_MAX) ? n : ARRAY_COUNT_MAX);
+//   size_ = assign_size;
+//   for (size_t i=0; i<assign_size; i++)
+//   {
+//     arrays_[i] = value;
+//   }
+// }
+
+// template <typename T, size_t ARRAY_COUNT_MAX>
+// template <typename U, size_t N>
+// void ConcatenatedArray<T, ARRAY_COUNT_MAX>::assign(const size_t n, const U (&values)[N])
+// {
+//   size_t n_smallest = ((n < N) ? n : N);
+//   size_t assign_size = ((n_smallest < ARRAY_COUNT_MAX) ? n_smallest : ARRAY_COUNT_MAX);
+//   size_ = assign_size;
+//   for (size_t i=0; i<assign_size; i++)
+//   {
+//     arrays_[i] = values[i];
+//   }
+// }
+
+// template <typename T, size_t ARRAY_COUNT_MAX>
+// template <typename U, size_t N>
+// void ConcatenatedArray<T, ARRAY_COUNT_MAX>::assign(const size_t n, const ConcatenatedArray<U,N> & values)
+// {
+//   size_t n_smallest = ((n < values.size()) ? n : values.size());
+//   size_t assign_size = ((n_smallest < ARRAY_COUNT_MAX) ? n_smallest : ARRAY_COUNT_MAX);
+//   size_ = assign_size;
+//   for (size_t i=0; i<assign_size; i++)
+//   {
+//     arrays_[i] = values[i];
+//   }
+// }
+
+template <typename T, size_t ARRAY_COUNT_MAX>
+void ConcatenatedArray<T, ARRAY_COUNT_MAX>::push_back(const T & value)
+{
+  arrays_[array_count_-1].push_back(value);
+}
+
+template <typename T, size_t ARRAY_COUNT_MAX>
+void ConcatenatedArray<T, ARRAY_COUNT_MAX>::pop_back()
+{
+  while ((array_count_ > 0) && (arrays_[array_count_-1].size() == 0))
+  {
+    --array_count_;
+  }
+  if ((array_count_ > 0) && (arrays_[array_count_-1].size() > 0))
+  {
+    arrays_[array_count_-1].pop_back();
   }
 }
 
-template <typename T, size_t MAX_SIZE>
-template <typename U, size_t N>
-void ConcatenatedArray<T, MAX_SIZE>::assign(const size_t n, const ConcatenatedArray<U,N> & values)
+template <typename T, size_t ARRAY_COUNT_MAX>
+size_t ConcatenatedArray<T, ARRAY_COUNT_MAX>::size()
 {
-  size_t n_smallest = ((n < values.size()) ? n : values.size());
-  size_t assign_size = ((n_smallest < MAX_SIZE) ? n_smallest : MAX_SIZE);
-  size_ = assign_size;
-  for (size_t i=0; i<assign_size; i++)
+  size_t size = 0;
+  for (size_t i=0; i<array_count_; ++i)
   {
-    values_[i] = values[i];
+    size += arrays_[i].size();
   }
+  return size;
 }
 
-template <typename T, size_t MAX_SIZE>
-void ConcatenatedArray<T, MAX_SIZE>::push_back(const T & value)
+template <typename T, size_t ARRAY_COUNT_MAX>
+size_t ConcatenatedArray<T, ARRAY_COUNT_MAX>::max_size()
 {
-  if (size_ < MAX_SIZE)
+  size_t max_size = 0;
+  for (size_t i=0; i<array_count_; ++i)
   {
-    values_[size_++] = value;
+    max_size += arrays_[i].max_size();
   }
+  return max_size;
 }
 
-template <typename T, size_t MAX_SIZE>
-void ConcatenatedArray<T, MAX_SIZE>::pop_back()
-{
-  if (size_ > 0)
-  {
-    --size_;
-  }
-}
+// template <typename T, size_t ARRAY_COUNT_MAX>
+// bool ConcatenatedArray<T, ARRAY_COUNT_MAX>::empty()
+// {
+//   return size_ == 0;
+// }
 
-template <typename T, size_t MAX_SIZE>
-size_t ConcatenatedArray<T, MAX_SIZE>::size()
-{
-  return size_;
-}
+// template <typename T, size_t ARRAY_COUNT_MAX>
+// bool ConcatenatedArray<T, ARRAY_COUNT_MAX>::full()
+// {
+//   return size_ == ARRAY_COUNT_MAX;
+// }
 
-template <typename T, size_t MAX_SIZE>
-size_t ConcatenatedArray<T, MAX_SIZE>::max_size()
-{
-  return MAX_SIZE;
-}
-
-template <typename T, size_t MAX_SIZE>
-bool ConcatenatedArray<T, MAX_SIZE>::empty()
-{
-  return size_ == 0;
-}
-
-template <typename T, size_t MAX_SIZE>
-bool ConcatenatedArray<T, MAX_SIZE>::full()
-{
-  return size_ == MAX_SIZE;
-}
-
-template <typename T, size_t MAX_SIZE>
-T * ConcatenatedArray<T, MAX_SIZE>::data()
-{
-  return values_;
-}
+// template <typename T, size_t ARRAY_COUNT_MAX>
+// T * ConcatenatedArray<T, ARRAY_COUNT_MAX>::data()
+// {
+//   return arrays_;
+// }
 
 #endif
