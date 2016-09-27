@@ -21,7 +21,7 @@
 #include "Vector.h"
 
 
-template <typename T, size_t ARRAY_COUNT_MAX>
+template <typename T, size_t MAX_ARRAY_COUNT>
 class ConcatenatedArray
 {
 public:
@@ -33,36 +33,25 @@ public:
   T & front();
   T & back();
   void clear();
-  // template <typename U>
-  // void fill(const U & value);
-  // template <typename U, size_t N>
-  // void fill(const U (&values)[N]);
-  // template <typename U, size_t N>
-  // void fill(const ConcatenatedArray<U,N> & values);
-  // template <typename U>
-  // void assign(const size_t n, const U & value);
-  // template <typename U, size_t N>
-  // void assign(const size_t n, const U (&values)[N]);
-  // template <typename U, size_t N>
-  // void assign(const size_t n, const ConcatenatedArray<U,N> & values);
   void push_back(const T & value);
   void pop_back();
-  size_t size();
-  size_t max_size();
-  // bool empty();
-  // bool full();
-  // T * data();
+  size_t array_count() const;
+  size_t size() const;
+  size_t max_size() const;
 
 private:
-  Vector<T> arrays_[ARRAY_COUNT_MAX];
+  Vector<T> arrays_[MAX_ARRAY_COUNT];
   size_t array_count_;
+  size_t size_;
+  size_t max_size_;
 };
 
-template <typename T, size_t ARRAY_COUNT_MAX>
-inline Print & operator <<(Print & stream, const ConcatenatedArray<T,ARRAY_COUNT_MAX> & array)
+template <typename T, size_t MAX_ARRAY_COUNT>
+inline Print & operator <<(Print & stream, ConcatenatedArray<T,MAX_ARRAY_COUNT> & array)
 {
   stream.print("[");
-  for (int i=0; i<array.size(); i++)
+  size_t size = array.size();
+  for (size_t i=0; i<size; ++i)
   {
     if (i != 0)
     {
