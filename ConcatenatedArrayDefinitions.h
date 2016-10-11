@@ -34,26 +34,26 @@ void ConcatenatedArray<T, MAX_ARRAY_COUNT>::addArray(T (&values)[MAX_SIZE], size
 }
 
 template <typename T, size_t MAX_ARRAY_COUNT>
-T & ConcatenatedArray<T, MAX_ARRAY_COUNT>::operator[](const size_t i)
+T & ConcatenatedArray<T, MAX_ARRAY_COUNT>::operator[](const size_t index)
 {
-  return at(i);
+  return at(index);
 }
 
 template <typename T, size_t MAX_ARRAY_COUNT>
-T & ConcatenatedArray<T, MAX_ARRAY_COUNT>::at(const size_t i)
+T & ConcatenatedArray<T, MAX_ARRAY_COUNT>::at(const size_t index)
 {
   size_t size = 0;
-  size_t index = i;
+  size_t i = index;
   for (size_t j=0; j<array_count_; ++j)
   {
     size = arrays_[j].size();
-    if (index < size)
+    if (i < size)
     {
-      return arrays_[j][index];
+      return arrays_[j][i];
     }
     else
     {
-      index -= size;
+      i -= size;
     }
   }
 }
