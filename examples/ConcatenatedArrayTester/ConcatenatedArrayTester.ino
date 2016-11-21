@@ -56,6 +56,10 @@ void setup()
   Serial << "cat_array:" << endl;
   Serial << cat_array << endl;
 
+  const Vector<int> & sub_vector = cat_array.subVector(1);
+  Serial << "cat_array[1]:" << endl;
+  Serial << sub_vector << endl;
+
 }
 
 

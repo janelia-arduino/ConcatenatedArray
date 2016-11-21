@@ -122,4 +122,10 @@ size_t ConcatenatedArray<T, MAX_ARRAY_COUNT>::max_size() const
   return max_size_;
 }
 
+template <typename T, size_t MAX_ARRAY_COUNT>
+const Vector<T> & ConcatenatedArray<T, MAX_ARRAY_COUNT>::subVector(const size_t index) const
+{
+  return arrays_[index];
+}
+
 #endif
