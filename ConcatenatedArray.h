@@ -38,7 +38,7 @@ public:
   size_t array_count() const;
   size_t size() const;
   size_t max_size() const;
-  const Vector<T> & subVector(const size_t index) const;
+  Vector<T> & subVector(const size_t index);
 
 private:
   Vector<T> arrays_[MAX_ARRAY_COUNT];
@@ -49,6 +49,23 @@ private:
 
 template <typename T, size_t MAX_ARRAY_COUNT>
 inline Print & operator <<(Print & stream, const ConcatenatedArray<T,MAX_ARRAY_COUNT> & array)
+{
+  stream.print("[");
+  size_t size = array.size();
+  for (size_t i=0; i<size; ++i)
+  {
+    if (i != 0)
+    {
+      stream.print(",");
+    }
+    stream.print(array[i]);
+  }
+  stream.print("]");
+  return stream;
+}
+
+template <typename T, size_t MAX_ARRAY_COUNT>
+inline Print & operator <<(Print & stream, ConcatenatedArray<T,MAX_ARRAY_COUNT> & array)
 {
   stream.print("[");
   size_t size = array.size();
