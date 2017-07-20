@@ -56,6 +56,7 @@ T & ConcatenatedArray<T, MAX_ARRAY_COUNT>::at(const size_t index)
       i -= size;
     }
   }
+  return arrays_[0][0]; // bad reference
 }
 
 template <typename T, size_t MAX_ARRAY_COUNT>
