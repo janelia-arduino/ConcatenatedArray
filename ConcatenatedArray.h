@@ -28,6 +28,7 @@ public:
   ConcatenatedArray();
   template <size_t MAX_SIZE>
   void addArray(T (&values)[MAX_SIZE], size_t size=0);
+  void removeArray();
   T & operator[](const size_t index);
   T & at(const size_t index);
   T & front();

@@ -6,5 +6,3 @@
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
 #include "ConcatenatedArray.h"
-
-

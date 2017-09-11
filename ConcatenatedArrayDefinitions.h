@@ -34,6 +34,18 @@ void ConcatenatedArray<T, MAX_ARRAY_COUNT>::addArray(T (&values)[MAX_SIZE], size
 }
 
 template <typename T, size_t MAX_ARRAY_COUNT>
+void ConcatenatedArray<T, MAX_ARRAY_COUNT>::removeArray()
+{
+  if (array_count_ > 0)
+  {
+    --array_count_;
+    size_ -= arrays_[array_count_].size();
+    max_size_ -= arrays_[array_count_].max_size();
+    arrays_[array_count_].clear();
+  }
+}
+
+template <typename T, size_t MAX_ARRAY_COUNT>
 T & ConcatenatedArray<T, MAX_ARRAY_COUNT>::operator[](const size_t index)
 {
   return at(index);
