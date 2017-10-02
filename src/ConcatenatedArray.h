@@ -9,13 +9,9 @@
 #define CONCATENATED_ARRAY_H
 
 #ifdef ARDUINO
-    #if ARDUINO >= 100
-        #include <Arduino.h>
-    #else
-        #include <WProgram.h>
-    #endif
+#include <Arduino.h>
 #else
-    #include <cstddef>
+#include <cstddef>
 #endif
 
 #include "Vector.h"
@@ -65,6 +61,6 @@ inline Print & operator <<(Print & stream, ConcatenatedArray<T,MAX_ARRAY_COUNT> 
   return stream;
 }
 
-#include "ConcatenatedArrayDefinitions.h"
+#include "ConcatenatedArray/ConcatenatedArrayDefinitions.h"
 
 #endif

@@ -1,9 +1,9 @@
-#include "Arduino.h"
-#include "Streaming.h"
-#include "ConcatenatedArray.h"
+#include <Arduino.h>
+#include <Streaming.h>
+#include <ConcatenatedArray.h>
 
 
-const size_t BAUDRATE = 9600;
+const long BAUDRATE = 115200;
 
 const size_t MAX_ARRAY_COUNT = 3;
 ConcatenatedArray<int,MAX_ARRAY_COUNT> cat_array;
