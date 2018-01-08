@@ -3,7 +3,7 @@
 #include <ConcatenatedArray.h>
 
 
-const long BAUDRATE = 115200;
+const long BAUD = 115200;
 
 const size_t MAX_ARRAY_COUNT = 3;
 ConcatenatedArray<int,MAX_ARRAY_COUNT> cat_array;
@@ -18,7 +18,7 @@ int array_2[ARRAY_COUNT_2];
 
 void setup()
 {
-  Serial.begin(BAUDRATE);
+  Serial.begin(BAUD);
   delay(1000);
 
   cat_array.addArray(array_0);
