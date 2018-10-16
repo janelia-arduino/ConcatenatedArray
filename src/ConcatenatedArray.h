@@ -17,16 +17,18 @@
 #include "Vector.h"
 
 
-template <typename T, size_t MAX_ARRAY_COUNT>
+template <typename T,
+  size_t MAX_ARRAY_COUNT>
 class ConcatenatedArray
 {
 public:
   ConcatenatedArray();
   template <size_t MAX_SIZE>
-  void addArray(T (&values)[MAX_SIZE], size_t size=0);
+  void addArray(T (&values)[MAX_SIZE],
+    size_t size=0);
   void removeArray();
-  T & operator[](const size_t index);
-  T & at(const size_t index);
+  T & operator[](size_t index);
+  T & at(size_t index);
   T & front();
   T & back();
   void clear();
@@ -35,7 +37,7 @@ public:
   size_t array_count() const;
   size_t size() const;
   size_t max_size() const;
-  Vector<T> & subVector(const size_t index);
+  Vector<T> & subVector(size_t index);
 
 private:
   Vector<T> arrays_[MAX_ARRAY_COUNT];
@@ -44,8 +46,10 @@ private:
   size_t max_size_;
 };
 
-template <typename T, size_t MAX_ARRAY_COUNT>
-inline Print & operator <<(Print & stream, ConcatenatedArray<T,MAX_ARRAY_COUNT> & array)
+template <typename T,
+  size_t MAX_ARRAY_COUNT>
+inline Print & operator <<(Print & stream,
+  ConcatenatedArray<T,MAX_ARRAY_COUNT> & array)
 {
   stream.print("[");
   size_t size = array.size();
